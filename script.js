@@ -1,5 +1,6 @@
 let guessButton
-console.log("Båda är finast!")
+let feedbackContainer
+writeOutput("")
 
 window.addEventListener("load", function () {
     init();
@@ -11,15 +12,39 @@ function init()
     guessButton.addEventListener("click", function () {
         slumpmässigt();
     })
+    feedbackContainer = document.getElementsByClassName("grid-element")[2];
+    feedbackContainer.innerHTML = writeOutput();
+
+    
 }
 
-//deklarering av listor
-drag = []
-utfall = []
+//Gör om det man skriver in till en array 
+function valt(){
+    drag = []
+    utfall = []
+    högar = prompt("Skriv ut ursprungsläget, skriv mellansalg mellan högarna")
+    i = 0
+    hög = ""
+    while (i < högar.length){
+        if (högar[i] == " "){
+           drag.push(hög)
+           hög = "" 
+        }
+        else{
+            hög = hög + högar[i]
+        }
+        i = i + 1
+    }
+    drag.push(hög)
+    programet()
+}
+
 
 //Bestämmer antal kort och antal högar
 //Skriver sedan ut det
 function slumpmässigt(){
+    drag = []
+    utfall = []
     antal_kort = Math.floor(Math.random() * 51) + 1
     antal_högar = (Math.floor(Math.random() * (antal_kort-1)) + 1)
     console.log(antal_kort)
@@ -37,26 +62,45 @@ function slumpmässigt(){
     programet()
 }
 
-//gör om det man skriver in till en array 
-function valt(){
-    högar = prompt("Skriv ut ursprungsläget, skriv mellansalg mellan högarna")
-    i = 0
-    hög = ""
-    while (i < högar.length){
-        if (högar[i]== " "){
-           drag.push(hög)
-           hög = "" 
-        }
-        else{
-            hög = hög + högar[i]
-        }
-        i = i + 1
+//Kör funktioner i en while loop och kollar när spelet är över
+//Skriver också ut varför spelet tog slut (Vinst, över 25 drag eller upprepning)
+function programet (){
+    let upprepad = false
+    let vinst = false
+    draggjorda = 1
+    slut = false
+    
+    console.log("Ursprungsläge: " + drag)
+    console.log("")
+    
+    
+    while (slut == false){
+        nytt_drag = ny_omgång(drag)
+        nytt_drag = nytt_drag.sort()
+        console.log("Drag "+ [draggjorda] + ":  " + nytt_drag)
+        drag = nytt_drag
+        total = summan(nytt_drag)
+        upprepad = upprepning(draggjorda, total, utfall)
+        vinst = Vinner(total, utfall)
+        utfall.push(total)
+        slut = Över(upprepad, vinst, draggjorda)
+        draggjorda = draggjorda + 1
     }
-    drag.push(hög)
-    programet()
-}
+    
+    if (vinst == true){
+        writeOutput("Vinst")
+    }
+    
+    else if (upprepad == true){
+        writeOutput("Går inte ut")
+    }
+    
+    else{
+        writeOutput("För många drag")
+    }
+    }
 
-//ändrar om högarna till den nya ordningen
+//Ändrar om högarna till den nya ordningen
 function ny_omgång(dragen){
     nya_draget = []
     i = 0
@@ -71,7 +115,7 @@ function ny_omgång(dragen){
     return nya_draget
 }
 
-//skapar en kod som man kan jämföra för att kolla om draget upprepats
+//Skapar en kod som man kan jämföra för att kolla om draget upprepats
 function summan(nya_draget){
     let summa = ""
     värde = 0
@@ -84,13 +128,13 @@ function summan(nya_draget){
     return summa
 }
 
-//kollar om draget har upprepats
+//Kollar om draget har upprepats
 function upprepning(drag_gjorda, draget, gamla_drag){
 i = 0
 while (i < (drag_gjorda - 1)){
     if (draget === gamla_drag[i]){
         return true
-        i = drag_gjorda.length
+        i = drag_gjorda
     }
     else{
         i = i + 1
@@ -98,7 +142,13 @@ while (i < (drag_gjorda - 1)){
 }
 }
 
-//kollar om det tidigare draget är samma som det föra draget
+function writeOutput(blablabla)
+{
+    let output = blablabla
+    feedbackContainer.innerHTML = output;
+}
+
+//Kollar om det tidigare draget är samma som det föra draget
 function Vinner( draget, gamla_drag){
 if (draget == gamla_drag[(gamla_drag.length - 1)]){
     return true
@@ -108,7 +158,7 @@ else{
 }
 }
 
-//kollar om spelet är slut
+//Kollar om spelet är slut
 function Över (upprepning, Vinst, drag_gjorda){
     if (Vinst == true){
         return true
@@ -122,39 +172,4 @@ function Över (upprepning, Vinst, drag_gjorda){
     else{
         return false
     }
-}
-
-function programet (){
-let upprepad = false
-let vinst = false
-draggjorda = 1
-slut = false
-
-console.log("Ursprungsläge: " + drag)
-console.log("")
-
-
-while (slut == false){
-    nytt_drag = ny_omgång(drag)
-    nytt_drag = nytt_drag.sort()
-    console.log("Drag "+ [draggjorda] + ":  " + nytt_drag)
-    drag = nytt_drag
-    total = summan(nytt_drag)
-    upprepad = upprepning(draggjorda, total, utfall)
-    vinst = Vinner(total, utfall)
-    utfall.push(total)
-    slut = Över(upprepad, vinst, draggjorda)
-    draggjorda = draggjorda + 1
-}
-
-if (vinst == true){
-    console.log("Vinst")
-}
-
-if(draggjorda >= 25){
-    console.log("För många drag")
-}
-if (upprepad == true){
-    console.log("Går inte ut")
-}
 }
