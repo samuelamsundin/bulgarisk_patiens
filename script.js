@@ -1,6 +1,7 @@
 let guessButton
+let guessButton2
 let feedbackContainer
-writeOutput("")
+
 
 window.addEventListener("load", function () {
     init();
@@ -10,10 +11,14 @@ function init()
 {
     guessButton = document.getElementsByClassName("button")[0];
     guessButton.addEventListener("click", function () {
+        valt();
+    })
+    guessButton2 = document.getElementsByClassName("button")[1];
+    guessButton2.addEventListener("click", function () {
         slumpmässigt();
     })
     feedbackContainer = document.getElementsByClassName("grid-element")[2];
-    feedbackContainer.innerHTML = writeOutput();
+    
 
     
 }
@@ -47,8 +52,8 @@ function slumpmässigt(){
     utfall = []
     antal_kort = Math.floor(Math.random() * 51) + 1
     antal_högar = (Math.floor(Math.random() * (antal_kort-1)) + 1)
-    console.log(antal_kort)
-    console.log(antal_högar)
+    console.log("Antal kort", + antal_kort)
+    console.log("Antal högar", + antal_högar)
 
 //Bestämmer antal kort i högarna
     while (antal_högar > 1){
@@ -88,15 +93,15 @@ function programet (){
     }
     
     if (vinst == true){
-        writeOutput("Vinst")
+        console.log("Vinst på drag "+ (draggjorda-1))
     }
     
     else if (upprepad == true){
-        writeOutput("Går inte ut")
+        console.log("Går inte ut, upptäcktes på drag " + (draggjorda-1))
     }
     
     else{
-        writeOutput("För många drag")
+        console.log((draggjorda-1)+" drag gjorda, går därför inte ut")
     }
     }
 
@@ -115,7 +120,7 @@ function ny_omgång(dragen){
     return nya_draget
 }
 
-//Skapar en kod som man kan jämföra för att kolla om draget upprepats
+//Gör om draget till en kod som man sen kan jämföra med andra för att kolla om draget upprepats
 function summan(nya_draget){
     let summa = ""
     värde = 0
@@ -142,11 +147,11 @@ while (i < (drag_gjorda - 1)){
 }
 }
 
-function writeOutput(blablabla)
+/*function writeOutput(blablabla)
 {
     let output = blablabla
     feedbackContainer.innerHTML = output;
-}
+}*/
 
 //Kollar om det tidigare draget är samma som det föra draget
 function Vinner( draget, gamla_drag){
