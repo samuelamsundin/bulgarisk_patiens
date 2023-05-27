@@ -147,12 +147,6 @@ while (i < (drag_gjorda - 1)){
 }
 }
 
-/*function writeOutput(blablabla)
-{
-    let output = blablabla
-    feedbackContainer.innerHTML = output;
-}*/
-
 //Kollar om det tidigare draget är samma som det föra draget
 function Vinner( draget, gamla_drag){
 if (draget == gamla_drag[(gamla_drag.length - 1)]){
